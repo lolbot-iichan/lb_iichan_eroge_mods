@@ -2,6 +2,9 @@ init:
     $ mods["lb__miniedit_start"] = u"Мини-редактор"
     $ mod_tags["lb__miniedit_start"] = ["length:unlimited","gameplay:other","protagonist:male","character:Семён","character:Алиса","character:Славя","character:Женя","character:Шурик","character:Электроник","character:Ольга Дмитриевна","character:Виола","character:Лена","character:Мику","character:Юля","character:Пионер","character:Ульяна","translation:english","translation:russian"]
 
+    $ lb__miniedit_allow_body = False
+    $ lb__miniedit_allow_full = False
+
 translate english strings:
     old "Мини-редактор"
     new "Mini-editor"
@@ -163,7 +166,12 @@ init python:
         
     def lb__miniedit_get_dress(who, emo):
         sprites = [i for i in renpy.display.image.images if len(i)>1 and i[0] == who and i[1] == emo and i[-1] not in ["close","far"]]
-        return sorted([" ".join(k[2:]) for k in sprites])
+        result = sorted([(" ".join(k)," ".join(k[2:])) for k in sprites])
+        if  not lb__miniedit_allow_body:
+            result = [(f,r) for f,r in result if r.find("body") == -1 ]
+        if  not lb__miniedit_allow_full:
+            result = [(f,r) for f,r in result if r.find("full") == -1 ]
+        return [f for f,r in result], [r for f,r in result]
         
 
 label lb__miniedit_loop:
@@ -206,7 +214,7 @@ label lb__miniedit_loop:
                 lb__miniedit_button(item["emo"], lb__miniedit_change_idx("show_emo",i) if len(emos) > 1 else None)
                 lb__miniedit_button("+",lb__miniedit_change_idx("show_emo_plus",i) if len(emos) and item["emo"] != emos[-1] else None,30)
                 lb__miniedit_button(width=30)
-                dresses = lb__miniedit_get_dress(lb__miniedit_get("show")[i]["who"], lb__miniedit_get("show")[i]["emo"])
+                fulldresses,dresses = lb__miniedit_get_dress(lb__miniedit_get("show")[i]["who"], lb__miniedit_get("show")[i]["emo"])
                 lb__miniedit_button("-",lb__miniedit_change_idx("show_dress_minus",i) if len(dresses) and item["dress"] != dresses[0] else None,30)
                 lb__miniedit_button(item["dress"],lb__miniedit_change_idx("show_dress",i) if len(dresses) > 1 else None)
                 lb__miniedit_button("+",lb__miniedit_change_idx("show_dress_plus",i) if len(dresses) and item["dress"] != dresses[-1] else None,30)
@@ -400,18 +408,18 @@ label test__export:
             $ lb__miniedit_get("show")[lb__miniedit_idx]["emo"] = lb_display_menu(tmp)
     
         elif lb__miniedit_mode == "show_dress_minus":
-            $ dresses = lb__miniedit_get_dress(lb__miniedit_get("show")[lb__miniedit_idx]["who"], lb__miniedit_get("show")[lb__miniedit_idx]["emo"])
+            $ fulldresses,dresses = lb__miniedit_get_dress(lb__miniedit_get("show")[lb__miniedit_idx]["who"], lb__miniedit_get("show")[lb__miniedit_idx]["emo"])
             $ tmp = dresses.index(lb__miniedit_get("show")[lb__miniedit_idx]["dress"]) - 1 if lb__miniedit_get("show")[lb__miniedit_idx]["dress"] in dresses else -1
             $ lb__miniedit_get("show")[lb__miniedit_idx]["dress"] = dresses[ tmp ]
 
         elif lb__miniedit_mode == "show_dress_plus":
-            $ dresses = lb__miniedit_get_dress(lb__miniedit_get("show")[lb__miniedit_idx]["who"], lb__miniedit_get("show")[lb__miniedit_idx]["emo"])
+            $ fulldresses,dresses = lb__miniedit_get_dress(lb__miniedit_get("show")[lb__miniedit_idx]["who"], lb__miniedit_get("show")[lb__miniedit_idx]["emo"])
             $ tmp = dresses.index(lb__miniedit_get("show")[lb__miniedit_idx]["dress"]) + 1 if lb__miniedit_get("show")[lb__miniedit_idx]["dress"] in dresses else -1
             $ lb__miniedit_get("show")[lb__miniedit_idx]["dress"] = dresses[ tmp ]
 
         elif lb__miniedit_mode == "show_dress":
-            $ keys = [i for i in renpy.display.image.images if len(i)>1 and i[0] == lb__miniedit_get("show")[lb__miniedit_idx]["who"] and i[1] == lb__miniedit_get("show")[lb__miniedit_idx]["emo"] and i[-1] not in ["close","far"]]
-            $ lb__miniedit_get("show")[lb__miniedit_idx]["dress"] = lb_display_menu([(" ".join(k)," ".join(k[2:])) for k in sorted(keys)])
+            $ fulldresses,dresses = lb__miniedit_get_dress(lb__miniedit_get("show")[lb__miniedit_idx]["who"], lb__miniedit_get("show")[lb__miniedit_idx]["emo"])
+            $ lb__miniedit_get("show")[lb__miniedit_idx]["dress"] = lb_display_menu(zip(fulldresses,dresses))
     
         elif lb__miniedit_mode == "show_close_minus":
             $ lb__miniedit_get("show")[lb__miniedit_idx]["close"] = lb__miniedit_cls[lb__miniedit_cls.index(lb__miniedit_get("show")[lb__miniedit_idx]["close"])-1]
