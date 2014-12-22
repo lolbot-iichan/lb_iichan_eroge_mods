@@ -23,7 +23,7 @@ python early:
         s(who, what, interact)
     def lb__txt(f,lst):
         s = renpy.exports.say
-        renpy.exports.say = lambda who, what, interact=True: lb__custom_say(f, lst, s, who, what, interact=True)
+        renpy.exports.say = lambda who, what, interact=True: lb__custom_say(f, lst, s, who, what, interact=interact)
 
     def lb__regexp_replace(what, before, after):
         return re.sub(before, after, what)
