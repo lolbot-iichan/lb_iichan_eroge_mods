@@ -102,18 +102,22 @@ label lb__miniedit_start:
         lb__miniedit_idx = 0
         lb__miniedit_upd_time()
 
+        lb__miniedit_names_list = [
+                (translation[i][_preferences.language] if i in translation and _preferences.language in translation[i] else i,i) 
+                for i in ["cs","dv","el","mi","mt","mz","pi","sh","sl","un","us","uv"]
+            ]
         if  _preferences.language == "english":
             lb__miniedit_time_menu = [(u"Interface design and background filter?\n",None),(u"Winter","prolog"),(u"Summer, Day","day"),(u"Summer, Sunrise/Sunset","sunset"),(u"Summer, Night","night")]
             lb__miniedit_spritetime_menu = [(u"Characters lighting?\n",None),(u"Day","day"),(u"Sunrise/Sunset","sunset"),(u"Night","night")]
             lb__miniedit_bg_menu = [(u"Which background?\n",None),(u"Interior","int"),(u"Exterior","ext"),(u"Solid black","black"),(u"Solid white","white")]
-            lb__miniedit_who_menu = [(u"Which character?\n",None)] + [(globals()[i+"_name"] if i+"_name" in globals() else i,i) for i in ["cs","dv","el","mi","mt","mz","pi","sh","sl","un","us","uv"]]
-            lb__miniedit_say_menu = [(u"Who is saying?\n",None)] + [(u"Narrator","narrator"),(u"Semyon","me"),(u"Thoughts","th")] + [(globals()[i+"_name"],i) for i in ["cs","dv","el","mi","mt","mz","pi","sh","sl","un","us","uv"]]
+            lb__miniedit_who_menu = [(u"Which character?\n",None)] + lb__miniedit_names_list
+            lb__miniedit_say_menu = [(u"Who is saying?\n",None)] + [(u"Narrator","narrator"),(u"Semyon","me"),(u"Thoughts","th")] + lb__miniedit_names_list
         else:
             lb__miniedit_time_menu = [(u"Оформление интерфейса и фильтр фонов?\n",None),(u"Зима","prolog"),(u"Лето, День","day"),(u"Лето, Утро/Вечер","sunset"),(u"Лето, Ночь","night")]
             lb__miniedit_spritetime_menu = [(u"Подсветка спрайтов?\n",None),(u"День","day"),(u"Утро/Вечер","sunset"),(u"Ночь","night")]
             lb__miniedit_bg_menu = [(u"Какой фон?\n",None),(u"Интерьер","int"),(u"Экстерьер","ext"),(u"Чёрный","black"),(u"Белый","white")]
-            lb__miniedit_who_menu = [(u"Который персонаж?\n",None)] + [(globals()[i+"_name"] if i+"_name" in globals() else i,i) for i in ["cs","dv","el","mi","mt","mz","pi","sh","sl","un","us","uv"]]
-            lb__miniedit_say_menu = [(u"Кто говорит?\n",None)] + [(u"Рассказчик","narrator"),(u"Семён","me"),(u"Мысль","th")] + [(globals()[i+"_name"],i) for i in ["cs","dv","el","mi","mt","mz","pi","sh","sl","un","us","uv"]]
+            lb__miniedit_who_menu = [(u"Который персонаж?\n",None)] + lb__miniedit_names_list
+            lb__miniedit_say_menu = [(u"Кто говорит?\n",None)] + [(u"Рассказчик","narrator"),(u"Семён","me"),(u"Мысль","th")] + lb__miniedit_names_list
         lb__miniedit_pos = ["fleft","left","cleft","center","cright","right","fright"]
         lb__miniedit_cls = ["far","","close"]
         lb__miniedit_nightmare = ["dead","nohead","nightmare","burned","blood","zombie"]
