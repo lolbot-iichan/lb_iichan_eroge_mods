@@ -187,7 +187,7 @@ label lb__endless_start:
                 cgs.add(i)
             if  i[0] == "bg":
                 bgs.add(i)
-            if  i[0] in colors and i[-1] != 'full':
+            if  i[0] in colors and i[-1] != 'full' and not " body" in " ".join(i):
                 if  not i[0] in sprites:
                     sprites[i[0]] = set()
                 sprites[i[0]].add(i)
@@ -200,12 +200,16 @@ label lb__endless_start:
             if  not k in sprites.keys() and not k in [None,"me","th"]:
                 sayers.pop(k)
 
+        for k in sprites.keys():
+            if  not k in sayers.keys():
+                sprites.pop(k)
+
         bg = None
         sayer = None
 
 label lb__endless_regenerate:
     python:
-        if  renpy.random.random() < 0.05 or not bg:
+        if  renpy.random.random() < 0.01 or not bg:
             bg = renpy.random.choice(bgs)
             if    "_day"    in bg[-1]: day_time()
             elif  "_night"  in bg[-1]: night_time()
@@ -221,7 +225,7 @@ label lb__endless_regenerate:
             if  sayer is not None:
                 renpy.show(renpy.random.choice(sprites[sayer]))
 
-        if  renpy.random.random() < 0.3:
+        if  renpy.random.random() < 0.1:
             if  sayer is not None:
                 renpy.show(renpy.random.choice(sprites[sayer]))
 
