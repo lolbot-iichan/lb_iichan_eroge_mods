@@ -29,7 +29,7 @@ init python:
                         result = False
                         LOG(u"(%s:%s) "%(item.filename,item.linenumber)+"Image not declared: "+" ".join(iname),"error")
                 else:
-                        LOG(u"TODO: Expression is used: "+`iname`,"warning")
+                        LOG(u"(%s:%s) "%(item.filename,item.linenumber)+u"TODO: Expression is used: "+`iname`,"warning")
         return result
 
         
