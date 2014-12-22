@@ -36,6 +36,4 @@ init python:
             else:
                 LOG(u"TODO: Item "+`k`+" does not have method predict_files():"+`item`,"warning") # TODO think of something for ATL images
         return result
-
-    test_if_images_are_loadable()
     
