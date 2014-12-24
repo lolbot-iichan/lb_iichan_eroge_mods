@@ -9,5 +9,8 @@ init python:
     def ui__mods_raise():
         opts = renpy.display.screen.screens[("preferences",None)]
         win = opts.ast.children[-1].children[-1].children[0].children[0]
-        win.children.insert(0,win.children.pop(22)) 
-        
+        for ch in win.children:
+            if  ch.displayable.__module__ == "renpy.ui" and ch.displayable.__name__ == "_textbutton":
+                if  ch.positional == [u'translation["mods"][_preferences.language]']:
+                    win.children.insert(0,win.children.pop(win.children.index(ch))) 
+                    break
